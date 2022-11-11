@@ -1,0 +1,48 @@
+version : '3.8'
+volumes:
+    wp_data:
+      driver: 'local'
+      driver_opts:
+        type: 'none'
+        o: 'bind'
+        device: /home/aaitbelh/data/wp
+    db_data:
+      driver: 'local'
+      driver_opts:
+        type: 'none'
+        o: 'bind'
+        device: /home/aaitbelh/data/mariadb
+services:
+  ng:
+    depends_on:
+      - wp
+    build: ./requirements/nginx
+    ports:
+      - "443:443"
+    volumes:
+      - wp_data:/var/www/html:rw
+    networks:
+      - myOwnNetwork
+  wp:
+    depends_on:
+      - db
+    build: ./requirements/wordpress
+    volumes:
+      - wp_data:/var/www/html:rw
+    env_file:
+      - .env
+    networks:
+      - myOwnNetwork
+  db:
+    build: ./requirements/mariadb
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    networks:
+      - myOwnNetwork
+    volumes:
+      - db_data:/var/lib/mysql
+networks:
+  myOwnNetwork:
+    driver: bridge
