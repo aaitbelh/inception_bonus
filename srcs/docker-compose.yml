@@ -12,6 +12,11 @@ volumes:
         type: 'none'
         o: 'bind'
         device: /home/aaitbelh/data/mariadb
+    ftp_data:
+      driver_opts:
+        type: 'none'
+        o: 'bind'
+        device: /home/aaitbelh/data/wp
 services:
   ng:
     depends_on:
@@ -43,6 +48,20 @@ services:
       - myOwnNetwork
     volumes:
       - db_data:/var/lib/mysql
+  rd:
+    build: ./requirements/redis
+    ports:
+      - "6379:6379"
+    networks:
+      - myOwnNetwork
+  ftp:
+    build: requirements/ftp
+    ports:
+      - "21:21"
+    volumes:
+      - ftp_data:/var/www/html
+    networks:
+      - myOwnNetwork
 networks:
   myOwnNetwork:
     driver: bridge

@@ -7,9 +7,10 @@ run:
 build :
 	@cd srcs && docker-compose build
 rmi:
-	@docker image rm --force $(docker image ls -q)
+	@docker image ls -q | xargs docker image rm --force
 rmv:
-	@docker volume rm $(docker volume ls -q)
+	@docker volume ls -q | xargs docker volume rm --force
 rmc:
-	@docker container rm $(docker contianer ls -q)
-clean : rmc rmv rmi
+	@docker container ls -a -q | xargs docker container rm --force
+
+clean: rmi rmc rmv
