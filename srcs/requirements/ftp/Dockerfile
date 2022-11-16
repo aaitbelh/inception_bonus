@@ -1,14 +1,11 @@
 FROM debian:buster
 
-
 RUN apt update && apt install vsftpd -y
-COPY tools/vsftpd.conf /etc/vsftpd.conf
-COPY tools/vsftpd.user_list /etc/vsftpd.user_list
+COPY conf/vsftpd.conf /etc/vsftpd.conf
+COPY conf/vsftpd.user_list /etc/vsftpd.user_list
 
-ADD tools/script.sh /usr/bin/script
+ADD tools/script.sh /
 
-RUN chmod +x /usr/bin/script
+RUN chmod +x /script.sh
 
-ENTRYPOINT [ "script" ]
-
-CMD ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["/script.sh", "vsftpd"]

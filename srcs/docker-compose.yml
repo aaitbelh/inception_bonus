@@ -1,26 +1,9 @@
 version : '3.8'
-volumes:
-    wp_data:
-      driver: 'local'
-      driver_opts:
-        type: 'none'
-        o: 'bind'
-        device: /home/aaitbelh/data/wp
-    db_data:
-      driver: 'local'
-      driver_opts:
-        type: 'none'
-        o: 'bind'
-        device: /home/aaitbelh/data/mariadb
-    ftp_data:
-      driver_opts:
-        type: 'none'
-        o: 'bind'
-        device: /home/aaitbelh/data/wp
 services:
   ng:
     depends_on:
       - wp
+      - adm
     build: ./requirements/nginx
     ports:
       - "443:443"
@@ -28,6 +11,7 @@ services:
       - wp_data:/var/www/html:rw
     networks:
       - myOwnNetwork
+    restart: on-failure
   wp:
     depends_on:
       - db
@@ -38,22 +22,32 @@ services:
       - .env
     networks:
       - myOwnNetwork
+    restart: on-failure
   db:
-    build: ./requirements/mariadb
+    build: 
+      context: ./requirements/mariadb
+      args:
+        - DB_NAME=${DB_NAME}
+        - DB_PASSWORD=${DB_PASSWORD}
+        - DB_USER=${DB_USER}
     ports:
       - "3306:3306"
-    env_file:
-      - .env
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_USER=${DB_USER}
     networks:
       - myOwnNetwork
     volumes:
       - db_data:/var/lib/mysql
+  #---------------------bonus--part
   rd:
     build: ./requirements/redis
     ports:
       - "6379:6379"
     networks:
       - myOwnNetwork
+    restart: on-failure
   ftp:
     build: requirements/ftp
     ports:
@@ -62,6 +56,54 @@ services:
       - ftp_data:/var/www/html
     networks:
       - myOwnNetwork
+    restart: 'on-failure'
+  adm:
+    build: requirements/adminer
+    volumes:
+      - adm_data:/var/www/html
+    networks:
+      - myOwnNetwork
+  portainer:
+    build: requirements/portainer
+    container_name: portainer
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/data
+    ports:
+      - 9443:9443
+
 networks:
   myOwnNetwork:
     driver: bridge
+volumes:
+    wp_data:
+      driver: 'local'
+      driver_opts:
+        type: volume
+        o: 'bind'
+        device: /home/aaitbelh/data/wp
+    db_data:
+      driver: 'local'
+      driver_opts:
+        type: none
+        o: 'bind'
+        device: /home/aaitbelh/data/mariadb
+    ftp_data:
+      driver_opts:
+        type: volume
+        o: 'bind'
+        device: /home/aaitbelh/data/wp
+    adm_data:
+      driver: 'local'
+      driver_opts:
+        type: volume
+        o: 'bind'
+        device: /home/aaitbelh/data/wp
+    portainer_data:
+      driver: 'local'
+      driver_opts:
+        type: volume
+        o: 'bind'
+        device: /home/aaitbelh/data/portainer

@@ -1,11 +1,13 @@
 name = .done
 up: $(name)
 $(name):
-	@cd srcs && docker-compose up -d
+	@cd srcs && docker-compose up --build
 run:
 	@cd srcs && docker-compose up
 build :
 	@cd srcs && docker-compose build
+down:
+	@cd srcs && docker-compose down
 rmi:
 	@docker image ls -q | xargs docker image rm --force
 rmv:

@@ -1,4 +1,4 @@
-##
+#
 # You should look at the following URL's in order to grasp a solid understanding
 # of Nginx configuration files in order to fully unleash the power of Nginx.
 # https://www.nginx.com/resources/wiki/start/
@@ -58,6 +58,12 @@ server {
 
 	# pass PHP scripts to FastCGI server
 	#
+	location /adminer/ {
+		include snippets/fastcgi-php.conf;
+		fastcgi_param SCRIPT_FILENAME /var/www/html/adminer/index.php;
+		fastcgi_pass adm:9001;
+	}
+
 	location ~ \.php$ {
 		include snippets/fastcgi-php.conf;
 	
