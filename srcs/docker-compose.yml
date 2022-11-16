@@ -56,7 +56,7 @@ services:
       - ftp_data:/var/www/html
     networks:
       - myOwnNetwork
-    restart: 'on-failure'
+    restart: on-failure
   adm:
     build: requirements/adminer
     volumes:
