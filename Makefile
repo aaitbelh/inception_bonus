@@ -15,4 +15,4 @@ rmv:
 rmc:
 	@docker container ls -a -q | xargs docker container rm --force
 
-clean: rmi rmc rmv
+clean: rmi  rmv rmc

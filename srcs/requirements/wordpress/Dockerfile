@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install curl -y \
 	&& apt-get install php7.3-common php7.3-fpm php-mysql -y \
 	&& apt-get install mariadb-client -y\
 	&& apt-get install php-redis -y
-COPY tools/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+COPY conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
 COPY tools/wpscript.sh /
 
 RUN service php7.3-fpm start

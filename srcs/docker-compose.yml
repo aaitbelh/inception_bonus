@@ -18,8 +18,13 @@ services:
     build: ./requirements/wordpress
     volumes:
       - wp_data:/var/www/html:rw
-    env_file:
-      - .env
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DOMAIN_NAME=${DOMAIN_NAME}
+      - WP_USER=${WP_USER}
+      - WP_PASSWORD=${WP_PASSWORD}
+      - WP_EMAIL=${WP_EMAIL}
+      - DB_PASSWORD=${DB_PASSWORD}
     networks:
       - myOwnNetwork
     restart: on-failure
@@ -42,14 +47,14 @@ services:
       - db_data:/var/lib/mysql
   #---------------------bonus--part
   rd:
-    build: ./requirements/redis
+    build: requirements/bonus/redis
     ports:
       - "6379:6379"
     networks:
       - myOwnNetwork
     restart: on-failure
   ftp:
-    build: requirements/ftp
+    build: requirements/bonus/ftp
     ports:
       - "21:21"
     volumes:
@@ -58,15 +63,14 @@ services:
       - myOwnNetwork
     restart: on-failure
   adm:
-    build: requirements/adminer
+    build: requirements/bonus/adminer
     volumes:
       - adm_data:/var/www/html
     networks:
       - myOwnNetwork
   portainer:
-    build: requirements/portainer
-    container_name: portainer
-    restart: unless-stopped
+    build: requirements/bonus/portainer
+    restart: on-failure
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
