@@ -16,3 +16,5 @@ rmc:
 	@docker container ls -a -q | xargs docker container rm --force
 
 clean: rmi  rmv rmc
+portfolio:
+	cp srcs/requirements/bonus/portfolio /home/aaitbelh/data/wp 

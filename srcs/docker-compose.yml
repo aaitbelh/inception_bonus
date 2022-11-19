@@ -11,7 +11,7 @@ services:
       - wp_data:/var/www/html:rw
     networks:
       - myOwnNetwork
-    restart: on-failure
+    restart: always
   wp:
     depends_on:
       - db
@@ -25,6 +25,7 @@ services:
       - WP_PASSWORD=${WP_PASSWORD}
       - WP_EMAIL=${WP_EMAIL}
       - DB_PASSWORD=${DB_PASSWORD}
+      - DB_USER=${DB_USER}
     networks:
       - myOwnNetwork
     restart: on-failure
@@ -54,6 +55,8 @@ services:
       - myOwnNetwork
     restart: on-failure
   ftp:
+    depends_on:
+      - wp
     build: requirements/bonus/ftp
     ports:
       - "21:21"
@@ -77,6 +80,16 @@ services:
       - portainer_data:/data
     ports:
       - 9443:9443
+  pf:
+    build: requirements/bonus/portfolio
+    restart: on-failure
+    volumes:
+      - portfolio_data:/var/www/html
+    networks:
+      - myOwnNetwork
+    ports:
+      - "444:444"
+
 
 networks:
   myOwnNetwork:
@@ -111,3 +124,9 @@ volumes:
         type: volume
         o: 'bind'
         device: /home/aaitbelh/data/portainer
+    portfolio_data:
+      driver: 'local'
+      driver_opts:
+        type: volume
+        o: 'bind'
+        device: /home/aaitbelh/data/portfolio
