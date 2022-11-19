@@ -1,6 +1,4 @@
-name = .done
-up: $(name)
-$(name):
+up:
 	@cd srcs && docker-compose up --build
 run:
 	@cd srcs && docker-compose up

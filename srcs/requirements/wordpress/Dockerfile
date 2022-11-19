@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install curl -y \
 COPY conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
 COPY tools/wpscript.sh /
 
-RUN service php7.3-fpm start
+RUN service php7.3-fpm start && chmod +X /wpscript/sh
 
 EXPOSE 9000
-CMD ["bash" ,"/wpscript.sh"]
+CMD ["/wpscript.sh"]
 

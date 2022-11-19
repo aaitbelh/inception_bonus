@@ -5,7 +5,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install mariadb-server=1:10.
 	apt-get install mariadb-client=1:10.3.36-0+deb10u2 -y
 COPY conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 COPY tools/script.sh /
-ARG DB_NAME 
+ARG DB_NAME
 ARG DB_USER
 ARG DB_PASSWORD
 ENV DB_NAME=${DB_NAME}

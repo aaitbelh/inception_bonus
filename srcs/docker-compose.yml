@@ -65,6 +65,9 @@ services:
     networks:
       - myOwnNetwork
     restart: on-failure
+    environment:
+      - FTPUSER=${FTPUSER}
+      - FTPPASSWORD=${FTPPASSWORD}
   adm:
     build: requirements/bonus/adminer
     volumes:
@@ -100,33 +103,33 @@ volumes:
       driver_opts:
         type: volume
         o: 'bind'
-        device: /home/aaitbelh/data/wp
+        device: /home/$USER/data/wp
     db_data:
       driver: 'local'
       driver_opts:
         type: none
         o: 'bind'
-        device: /home/aaitbelh/data/mariadb
+        device: /home/$USER/data/mariadb
     ftp_data:
       driver_opts:
         type: volume
         o: 'bind'
-        device: /home/aaitbelh/data/wp
+        device: /home/$USER/data/wp
     adm_data:
       driver: 'local'
       driver_opts:
         type: volume
         o: 'bind'
-        device: /home/aaitbelh/data/wp
+        device: /home/$USER/data/wp
     portainer_data:
       driver: 'local'
       driver_opts:
         type: volume
         o: 'bind'
-        device: /home/aaitbelh/data/portainer
+        device: /home/$USER/data/portainer
     portfolio_data:
       driver: 'local'
       driver_opts:
         type: volume
         o: 'bind'
-        device: /home/aaitbelh/data/portfolio
+        device: /home/$USER/data/portfolio
